@@ -1,0 +1,429 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive E-Commerce Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      background: rgba(44, 62, 80, 0.8);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .logo {
+      font-size: 1.5rem;
+      color: white;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #27ae60;
+    }
+
+    .cart {
+      font-size: 1rem;
+      background: #27ae60;
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      color: white;
+      margin-right: 10%;
+    }
+
+    .cart-count {
+      background: white;
+      color: #27ae60;
+      padding: 2px 6px;
+      border-radius: 50%;
+      font-weight: bold;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff') center/cover no-repeat;
+      height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      padding-top: 60px;
+    }
+
+    /* ===== CART DROPDOWN ===== */
+    .cart-dropdown {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      width: 300px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .cart-dropdown.active {
+      display: block;
+    }
+
+    .cart-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+    }
+
+    .cart-item-variant {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    /* ===== PRODUCTS ===== */
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .product-details {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .product-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      color: #e67e22;
+      font-weight: bold;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-add {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-add:hover {
+      background: #219150;
+    }
+
+    .btn-disabled {
+      background: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    @media(max-width:600px){
+       nav .logo{
+          font-size: 150%;
+          color: white;
+        }
+
+        nav ul li a{
+            display: none;
+        }
+
+        nav .cart{
+            margin-right: 10%;
+        }
+       
+    }
+
+     footer{
+          width: 100%;
+          height: 7%;
+          background: rgba(44, 62, 80, 0.8);
+          color: white;
+          text-align: center;
+          padding-top: 5px;
+        }
+        span{
+          font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+          color: white;
+         text-decoration: none;
+        }
+        span a{
+          text-decoration: none;
+        }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav>
+    <div class="logo">K-STORE</div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="cart" id="cartIcon">
+      🛒 Cart <span class="cart-count" id="cartCount">0</span>
+    </div>
+    <div class="cart-dropdown" id="cartDropdown"></div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <div class="hero">
+    Welcome to My E-Commerce Store
+  </div>
+
+  <!-- ===== PRODUCTS ===== -->
+  <div class="container" id="productContainer"></div>
+
+  <script>
+    const products = [
+      {
+        name: "Sneakers",
+        price: 59.99,
+        image: "https://www.refinery29.com/images/9318914.png?crop=40:21",
+        variants: ["Red - Size 42", "Blue - Size 43", "Black - Size 44"],
+        inStock: true
+      },
+      {
+        name: "Pink Sneaker",
+        price: 120.00,
+        image: "https://cms-cdn.thesolesupplier.co.uk/2020/05/DIY2_w1160.jpg",
+        variants: ["Silver", "Black Leather", "Gold"],
+        inStock: false
+      },
+      {
+        name: "Black Sneaker",
+        price: 75.50,
+        image: "https://www.highsnobiety.com/static-assets/dato/1702659671-black-sneakers.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+      {
+        name: "Leather Backpack",
+        price: 75.50,
+        image: "https://cms-cdn.thesolesupplier.co.uk/2020/12/nike-air-max-90-white-purple-pink-fa-tsw.jpg.webp",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+      {
+        name: "Leather Backpack",
+        price: 75.50,
+        image: "https://i.pinimg.com/originals/91/24/a0/9124a0dee9ce1a9dc79a28411bea7e06.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+      {
+        name: "Leather HandBag",
+        price: 75.50,
+        image: "https://www.crocodile-bag.com/wp-content/uploads/2018/06/Large-Alligator-Leather-Business-Trip-Briefcase-for-Men-Back-705x705.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+
+      {
+        name: "Leather Backpack",
+        price: 75.50,
+         image: "https://i5.walmartimages.com/asr/adc45dd5-c4a3-48ab-ad0c-b15e7380f6e3.ad70d55549f2772dcca06b52b50e5748.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+
+        {
+        name: "Kids Sneakers",
+        price: 75.50,
+        image: "https://i5.walmartimages.com/seo/Girls-Sneakers-Kids-Running-Shoes-Lightweight-Breathable-On-Athletic-Sport-Sneakers-for-Active-Play-and-Comfort_77e08e33-8cdf-4a09-a9ce-8e72570ea5b5.8f7f2fbce2cf26e4b27d0d36287c5917.jpeg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+      {
+        name: "Leather Backpack",
+        price: 75.50,
+        image: "https://images-na.ssl-images-amazon.com/images/I/81TL3uDRlsL.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+
+      {
+        name: "Glowing Sneakers",
+        price: 75.50,
+        image: "https://m.media-amazon.com/images/I/81-AGPR3ssL._AC_.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+      {
+        name: "Leather Backpack",
+        price: 75.50,
+        image: "https://images-na.ssl-images-amazon.com/images/I/81TL3uDRlsL.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+
+      {
+        name: "Glowing Sneakers",
+        price: 75.50,
+        image: "https://m.media-amazon.com/images/I/81-AGPR3ssL._AC_.jpg",
+        variants: ["Brown", "Black", "Tan"],
+        inStock: true
+      },
+    ];
+
+    let cart = [];
+    let cartCount = 0;
+    const productContainer = document.getElementById("productContainer");
+    const cartCountElement = document.getElementById("cartCount");
+    const cartDropdown = document.getElementById("cartDropdown");
+    const cartIcon = document.getElementById("cartIcon");
+   
+    
+
+    // Toggle cart dropdown
+    cartIcon.addEventListener("click", () => {
+      cartDropdown.classList.toggle("active");
+    });
+
+    function updateCartDropdown() {
+      cartDropdown.innerHTML = "";
+      if (cart.length === 0) {
+        cartDropdown.innerHTML = "<div class='cart-item'>Cart is empty</div>";
+        return;
+      }
+      cart.forEach(item => {
+        const cartItem = document.createElement("div");
+        cartItem.classList.add("cart-item");
+        cartItem.innerHTML = `
+          <div class="cart-item-name">${item.name} - $${item.price.toFixed(2)}</div>
+          <div class="cart-item-variant">Variant: ${item.variant}</div>
+        `;
+        cartDropdown.appendChild(cartItem);
+      });
+    }
+
+    products.forEach(product => {
+      const card = document.createElement("div");
+      card.classList.add("product-card");
+
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <div class="product-details">
+          <div class="product-name">${product.name}</div>
+          <div class="product-price">$${product.price.toFixed(2)}</div>
+          <select>
+            ${product.variants.map(v => `<option>${v}</option>`).join("")}
+          </select>
+          <button class="btn ${product.inStock ? "btn-add" : "btn-disabled"}"
+            ${product.inStock ? "" : "disabled"}>
+            ${product.inStock ? "Add to Cart" : "Out of Stock"}
+          </button>
+        </div>
+      `;
+
+      if (product.inStock) {
+        const addButton = card.querySelector("button");
+        const variantSelect = card.querySelector("select");
+        addButton.addEventListener("click", () => {
+          const selectedVariant = variantSelect.value;
+          cart.push({
+            name: product.name,
+            price: product.price,
+            variant: selectedVariant
+          });
+          cartCount++;
+          cartCountElement.textContent = cartCount;
+          updateCartDropdown();
+        });
+      }
+
+      productContainer.appendChild(card);
+    });
+
+    updateCartDropdown();
+  </script>
+
+     <footer>
+        <p class="down">&copy2025
+            <span>K-Store</span>
+        </p>
+        
+     </footer>
+</body>
+</html>
